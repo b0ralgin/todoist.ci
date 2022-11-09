@@ -148,10 +148,10 @@ func (tw *TasksListWidget) CompleteTask(g *gocui.Gui, v *gocui.View) error {
 func (tw *TasksListWidget) SetTaskDone(g *gocui.Gui, v *gocui.View) error {
 	id := tw.tasks[tw.current+tw.offset].ID
 	if err := tw.cli.CompleteTask(id); err != nil {
-		return err
+		return NewError("failed to save task", g)
 	}
 	if err := tw.Sync(); err != nil {
-		return err
+		return NewError("failed to sync", g)
 	}
 	return nil
 }
@@ -170,7 +170,7 @@ func (tw *TasksListWidget) ChangeProject(g *gocui.Gui, v *gocui.View) error {
 	tw.tasks[current].Project = line
 	id := tw.tasks[current].ID
 	if err := tw.cli.ChangeProject(id, line); err != nil {
-		return err
+		return NewError("failed to change project", g)
 	}
 	g.DeleteKeybindings(ProjectWidgetName)
 	if err := g.SetKeybinding(ProjectWidgetName, gocui.KeyEnter, gocui.ModNone, tw.ChangeProject); err != nil {
@@ -188,10 +188,10 @@ func (tw *TasksListWidget) ChangeProject(g *gocui.Gui, v *gocui.View) error {
 func (tw *TasksListWidget) DeleteTask(g *gocui.Gui, v *gocui.View) error {
 	t := tw.tasks[tw.current+tw.offset]
 	if err := tw.cli.DeleteTask(t.ID); err != nil {
-		return err
+		return NewError("failed to delete task", g)
 	}
 	if err := tw.Sync(); err != nil {
-		return err
+		return NewError("failed to sync", g)
 	}
 	return nil
 }

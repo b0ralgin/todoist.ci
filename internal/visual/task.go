@@ -56,6 +56,9 @@ func (ts *TaskWidget) AddTask(g *gocui.Gui, todoCli *tasks.Client, syncFn func()
 		return err
 	}
 	applyFn := func(g *gocui.Gui, v *gocui.View) error {
+		defer func() {
+			ts.Discard(g, v)
+		}()
 		if err := todoCli.EditTask(tasks.Task{
 			ID:       ts.idx,
 			Priority: ts.priority,
@@ -63,12 +66,12 @@ func (ts *TaskWidget) AddTask(g *gocui.Gui, todoCli *tasks.Client, syncFn func()
 			DueTo:    ts.date,
 		}); err != nil {
 			//TODO: show error on screen
-			return err
+			return NewError("failed to save task", g)
 		}
 		if err := syncFn(); err != nil {
-			return err
+			return NewError("failed to sync", g)
 		}
-		return ts.Discard(g, v)
+		return nil
 	}
 
 	if err := g.SetKeybinding("priority", gocui.KeyCtrlS, gocui.ModNone, applyFn); err != nil {
