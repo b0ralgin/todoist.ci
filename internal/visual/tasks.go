@@ -62,7 +62,14 @@ func (tw *TasksListWidget) Sync() error {
 	}
 	tw.tasks = tasks
 	sort.Slice(tw.tasks, func(i, j int) bool {
-		return tw.tasks[i].DueTo.Before(tw.tasks[j].DueTo)
+		if t := tw.tasks[i].DueTo.Before(tw.tasks[j].DueTo); t {
+			return t
+		}
+
+		if t := tw.tasks[i].DueTo.After(tw.tasks[j].DueTo); t {
+			return !t
+		}
+		return tw.tasks[i].Priority > tw.tasks[j].Priority
 	})
 	tw.total = len(tasks)
 	return nil
