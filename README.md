@@ -18,6 +18,7 @@ make install
 
 # Setup 
 Config by default stored in $HOME/.config/todoist/config.json
+
 It's a JSON file with the following scheme:
 ```
 {
