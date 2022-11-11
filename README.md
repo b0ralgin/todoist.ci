@@ -6,7 +6,7 @@ This project is a TUI for todoist client (link). The project written in golang, 
 You need Go 1.15
 ```bash 
 git clone $REPO_LINK
-cd todoist-cui
+cd todoist.ci
 make install 
 ```
 
