@@ -1,12 +1,12 @@
 ## Desciption 
 This project is a TUI for todoist client (link). The project written in golang, uses gocui (link) as a graphical framework. 
 
-#Installation 
+# Installation 
 ## Build from source 
 You need Go 1.15
 ```bash 
 git clone $REPO_LINK
-cd todoist-cui
+cd todoist.ci
 make install 
 ```
 
@@ -16,6 +16,16 @@ make install
  [comment]: OBS[Link]
 [comment]: ### Mac OS 
 
+# Setup 
+Config by default stored in $HOME/.config/todoist/config.json
+
+It's a JSON file with the following scheme:
+```
+{
+  "token":"12345676789dsdsdsd"
+}
+```
+You can find your token from the Todoist Web app, at Todoist Settings -> Integrations -> API token.
 # Main window 
 Pic 
 ### Add/Edit Task

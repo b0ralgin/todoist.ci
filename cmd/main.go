@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 
+	"github.com/b0ralgin/todoist.ci/internal/config"
 	"github.com/b0ralgin/todoist.ci/internal/tasks"
 	"github.com/b0ralgin/todoist.ci/internal/visual"
 	"github.com/jroimartin/gocui"
@@ -17,7 +18,13 @@ func main() {
 	defer g.Close()
 	g.InputEsc = true
 	helpWidget := visual.NewHelpWidget()
-	todoistCli := tasks.NewClient("c29bf706b08674e03e7de2488873f4d385e3df49")
+
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	todoistCli := tasks.NewClient(cfg.Token)
 	taskListWidget := visual.NewTasksListWidget(todoistCli)
 	if err := taskListWidget.Sync(); err != nil {
 		log.Panicln(err)
