@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"sort"
-	"strconv"
 	"text/tabwriter"
 
 	"github.com/b0ralgin/todoist.ci/internal/tasks"
@@ -135,13 +134,12 @@ func (tw *TasksListWidget) EditTask(g *gocui.Gui, v *gocui.View) error {
 }
 
 func (tw *TasksListWidget) NewTask(g *gocui.Gui, v *gocui.View) error {
-	ts := NewTaskWidget(tasks.Task{}, -1)
+	ts := NewTaskWidget(tasks.Task{}, "")
 	return ts.AddTask(g, tw.cli, tw.Sync)
 }
 
 func (tw *TasksListWidget) CompleteTask(g *gocui.Gui, v *gocui.View) error {
 	t := tw.tasks[tw.offset+tw.current]
-	v.Title = strconv.Itoa(t.ID)
 	if err := tw.cli.CompleteTask(t.ID); err != nil {
 		return err
 	}

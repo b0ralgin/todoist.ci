@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/civil"
-	"github.com/fatih/color"
+	// "github.com/fatih/color"
 	"github.com/pkg/errors"
 	todoist "github.com/sachaos/todoist/lib"
 )
@@ -15,7 +15,7 @@ type Client struct {
 }
 
 type Task struct {
-	ID       int
+	ID       string
 	Project  string
 	Priority uint
 	Text     string
@@ -34,8 +34,8 @@ func (c *Client) Sync(ctx context.Context) error {
 	return c.cli.Sync(ctx)
 }
 
-func (c *Client) GetProjects() map[int]string {
-	res := map[int]string{}
+func (c *Client) GetProjects() map[string]string {
+	res := map[string]string{}
 	for _, p := range c.cli.Store.Projects {
 		res[p.ID] = p.Name
 	}
@@ -50,9 +50,9 @@ func (c *Client) GetTasks() ([]Task, error) {
 	return c.traversal(item), nil
 }
 
-func (c *Client) ChangeProject(id int, project string) error {
+func (c *Client) ChangeProject(id string, project string) error {
 	pid := c.cli.Store.Projects.GetIDByName(project)
-	if pid == 0 {
+	if pid == "" {
 		return errors.New("project not found ")
 	}
 	item := todoist.Item{}
@@ -75,35 +75,35 @@ func (c *Client) EditTask(task Task) error {
 		t.DateString = "null"
 	}
 	ctx := context.Background()
-	if task.ID == 0 {
+	if task.ID == "" {
 		return c.cli.AddItem(ctx, t)
 	}
 	t.ID = task.ID
 	return c.cli.UpdateItem(ctx, t)
 }
 
-func (c *Client) CompleteTask(id int) error {
-	return c.cli.CloseItem(context.Background(), []int{id})
+func (c *Client) CompleteTask(id string) error {
+	return c.cli.CloseItem(context.Background(), []string{id})
 }
 
-func (c *Client) DeleteTask(id int) error {
-	return c.cli.DeleteItem(context.Background(), []int{id})
+func (c *Client) DeleteTask(id string) error {
+	return c.cli.DeleteItem(context.Background(), []string{id})
 }
 
-func (c *Client) MapColor() map[string]color.Attribute {
-	res := map[string]color.Attribute{}
-	for _, p := range c.cli.Store.Projects {
-		res[p.Name] = color.Attribute(p.Color - 9)
-	}
-	return res
-}
+// func (c *Client) MapColor() map[string]color.Attribute {
+// 	res := map[string]color.Attribute{}
+// 	for _, p := range c.cli.Store.Projects {
+// 		res[p.Name] = color.Attribute(p.Color)
+// 	}
+// 	return res
+// }
 
 func (c *Client) traversal(item *todoist.Item) []Task {
 	if item == nil {
 		return []Task{}
 	}
 	task := []Task{}
-	if item.Due != nil && item.Checked == 0 && !item.DateTime().After(time.Now()) {
+	if item.Due != nil && !item.DateTime().After(time.Now()) {
 		task = []Task{c.mapTask(item)}
 	}
 	child := c.traversal(item.ChildItem)

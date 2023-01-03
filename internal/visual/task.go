@@ -12,14 +12,14 @@ import (
 
 type TaskWidget struct {
 	selectedField string
-	idx           int
+	idx           string
 	priority      uint
 	date          civil.Date
 	text          string
 }
 
-func NewTaskWidget(task tasks.Task, idx int) *TaskWidget {
-	if idx == -1 {
+func NewTaskWidget(task tasks.Task, idx string) *TaskWidget {
+	if idx == "" {
 		return &TaskWidget{priority: 4, date: civil.DateOf(time.Now()), text: ""}
 	}
 	return &TaskWidget{idx: idx, priority: task.Priority, text: task.Text, date: task.DueTo}

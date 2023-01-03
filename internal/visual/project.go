@@ -9,7 +9,7 @@ import (
 )
 
 type ProjectWidget struct {
-	projects map[int]string
+	projects map[string]string
 	selected string
 }
 
@@ -17,7 +17,7 @@ const (
 	ProjectWidgetName = "projects"
 )
 
-func NewProjectWidget(projects map[int]string) *ProjectWidget {
+func NewProjectWidget(projects map[string]string) *ProjectWidget {
 	return &ProjectWidget{projects: projects}
 }
 
